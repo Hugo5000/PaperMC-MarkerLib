@@ -90,7 +90,7 @@ public class DisplayMarker {
      */
     public static List<BlockDisplay> createDotAt(JavaPlugin plugin, Player player, Location location, float xSize, float ySize, float zSize, BlockData blockData, Color color) {
         ArrayList<BlockDisplay> entities = new ArrayList<>(1);
-        createBlockDisplay(plugin, player, location, new Vector3f(0, 0, 0), new Vector3f(xSize, ySize, zSize), blockData, color, entities);
+        createBlockDisplay(plugin, player, location, new Vector3f(-xSize/2, -ySize/2, -zSize/2), new Vector3f(xSize, ySize, zSize), blockData, color, entities);
         return entities;
     }
 
