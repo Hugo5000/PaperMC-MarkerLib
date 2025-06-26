@@ -20,13 +20,14 @@ repositories {
     mavenCentral()
     // paper-api
     maven("https://repo.papermc.io/repository/maven-public/")
+    mavenLocal()
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:24.0.1")
+    compileOnly("org.jetbrains:annotations:26.0.2")
     // paper api
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-
+    compileOnly("at.hugob:annotations:0.0.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testImplementation("net.kyori:adventure-api:4.21.0")
@@ -112,22 +113,12 @@ publishing {
                 scm {
                     connection.set("scm:git:git://github.com/Hugo5000/PaperMC-MarkerLib.git")
                     developerConnection.set("scm:git:ssh://github.com/Hugo5000/PaperMC-MarkerLib.git")
-                    url.set("http://github.com/Hugo5000/PaperMC-MarkerLib/tree/master")
+                    url.set("https://github.com/Hugo5000/PaperMC-MarkerLib/tree/master")
                 }
             }
             from(components["java"])
         }
     }
-//    repositories {
-//        maven {
-//            name = "ossrh-staging-api"
-//            url = uri("https://central.sonatype.com/api/v1/publish")
-//            credentials {
-//                username = ossrhUsername
-//                password = ossrhPassword
-//            }
-//        }
-//    }
 }
 
 signing {
