@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public abstract class MarkerGroup<T extends MarkerGroup<T>> {
-    private AtomicBoolean removed = new AtomicBoolean(false);
+    private final AtomicBoolean removed = new AtomicBoolean(false);
     protected final MarkerManager markerManager;
 
     protected final Consumer<BlockDisplay> onAdd;
