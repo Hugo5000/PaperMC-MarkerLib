@@ -3,6 +3,7 @@ package at.hugob.plugin.library.marker.shapes;
 import at.hugob.plugin.library.marker.Marker;
 import at.hugob.plugin.library.marker.MarkerGroup;
 import at.hugob.plugin.library.marker.MarkerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.BlockDisplay;
@@ -61,13 +62,19 @@ public abstract class SingleLocationMarkerGroup<T extends SingleLocationMarkerGr
     }
 
     @Override
-    public void remove() {
-        super.remove();
-        for (BlockDisplay display : blockDisplays) {
-            onRemove.accept(display);
-            display.remove();
-        }
-        blockDisplays.clear();
+    public Runnable getRemoval() {
+        return internalRemoval(markerManager, blockDisplays, onRemove);
+    }
+    private static Runnable internalRemoval(MarkerManager manager, List<BlockDisplay> blockDisplays, Consumer<BlockDisplay> onRemove) {
+        return () -> {
+            Bukkit.getScheduler().runTask(manager.plugin, () -> {
+                for (BlockDisplay display : blockDisplays) {
+                    onRemove.accept(display);
+                    display.remove();
+                }
+                blockDisplays.clear();
+            });
+        };
     }
 
     @SuppressWarnings("unchecked")
@@ -84,7 +91,7 @@ public abstract class SingleLocationMarkerGroup<T extends SingleLocationMarkerGr
         for (BlockDisplay blockDisplay : blockDisplays) {
             var t = blockDisplay.getTransformation();
             blockDisplay.setTransformation(new Transformation(
-                t.getTranslation(),
+                t.getTranslation().rotate(t.getLeftRotation().invert()).rotate(rotation),
                 rotation,
                 t.getScale(),
                 t.getRightRotation()
@@ -101,17 +108,21 @@ public abstract class SingleLocationMarkerGroup<T extends SingleLocationMarkerGr
 
     @Override
     public T addViewer(Player player) {
+        super.addViewer(player);
         for (BlockDisplay display : blockDisplays) {
             player.showEntity(markerManager.plugin, display);
         }
-        return super.addViewer(player);
+        //noinspection unchecked
+        return (T) this;
     }
 
     @Override
     public T removeViewer(Player player) {
+        super.removeViewer(player);
         for (BlockDisplay display : blockDisplays) {
             player.hideEntity(markerManager.plugin, display);
         }
-        return super.removeViewer(player);
+        //noinspection unchecked
+        return (T) this;
     }
 }

@@ -29,11 +29,11 @@ public class Marker {
     public Vector3f scale;
 
     public Marker(BlockData blockData, Location location, Vector3f translation, Quaternionf rotation, Vector3f scale, @Nullable Color glowColor) {
-        this.blockData = blockData;
-        this.location = location;
-        this.translation = translation;
-        this.rotation = rotation;
-        this.scale = scale;
+        this.blockData = blockData.clone();
+        this.location = location.clone();
+        this.translation = new Vector3f(translation);
+        this.rotation = new Quaternionf(rotation);
+        this.scale = new Vector3f(scale);
         this.glowColor = glowColor;
     }
 
@@ -42,7 +42,7 @@ public class Marker {
             display.setBlock(blockData);
             display.setTransformation(new Transformation(
                 translation,
-                new Quaternionf(),
+                rotation,
                 scale,
                 new Quaternionf()
             ));

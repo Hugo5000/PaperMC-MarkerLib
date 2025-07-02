@@ -26,6 +26,7 @@ public class CoordinateSystemMarker extends SingleLocationMarkerGroup<Coordinate
 
     @Override
     public CoordinateSystemMarker scale(Vector3f scale) {
+        scale = new Vector3f(scale).div(2);
         for (int i = 0; i < 3; i++) {
             var marker = markers.get(i);
             float scaleVal = Math.max(0.1f, Math.abs(scale.get(i))) * Math.signum(scale.get(i));

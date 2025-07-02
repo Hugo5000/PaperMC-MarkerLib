@@ -4,12 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public abstract class MarkerGroup<T extends MarkerGroup<T>> {
+    private AtomicBoolean removed = new AtomicBoolean(false);
     protected final MarkerManager markerManager;
 
     protected final Consumer<BlockDisplay> onAdd;
@@ -23,24 +26,28 @@ public abstract class MarkerGroup<T extends MarkerGroup<T>> {
         this.onRemove = onRemove;
     }
 
+    @ApiStatus.Internal
     public abstract void load(Chunk chunk);
-
+    @ApiStatus.Internal
     public abstract void unload(Chunk chunk);
 
-    @SuppressWarnings("unchecked")
     public T addViewer(Player player) {
         players.add(player.getUniqueId());
+        //noinspection unchecked
         return (T) this;
     }
 
-    @SuppressWarnings("unchecked")
     public T removeViewer(Player player) {
         players.remove(player.getUniqueId());
+        //noinspection unchecked
         return (T) this;
     }
 
-    public void remove() {
-        markerManager.remove(this);
+    public final void remove() {
+        if (!removed.getAndSet(true)) {
+            markerManager.remove(this);
+            getRemoval().run();
+        }
     }
 
     protected final void makeVisible(BlockDisplay display) {
@@ -51,4 +58,7 @@ public abstract class MarkerGroup<T extends MarkerGroup<T>> {
             }
         }
     }
+
+    @ApiStatus.Internal
+    public abstract Runnable getRemoval();
 }
