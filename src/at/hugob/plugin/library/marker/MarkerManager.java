@@ -4,7 +4,6 @@ import at.hugob.plugin.library.marker.shapes.CoordinateSystemMarker;
 import at.hugob.plugin.library.marker.shapes.DotMarker;
 import at.hugob.plugin.library.marker.shapes.LineMarker;
 import at.hugob.plugin.library.marker.shapes.RegionMarker;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
 import org.bukkit.Location;
